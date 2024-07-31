@@ -1,0 +1,6 @@
+opencv-python-headless
+cvzone
+numpy
+tensorflow
+flask
+pyttsx3r
