@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hand Sign Detection</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
+        h1 {
+            color: #004d99;
+            margin-top: 20px;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 30px;
+        }
+        #videoContainer {
+            margin-top: 20px;
+            position: relative;
+            background-color: #fff;
+            border: 2px solid #004d99;
+            padding: 10px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        #videoFeed {
+            width: 100%;
+            border-radius: 10px;
+        }
+        #controls {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #004d99;
+            color: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+        #controls button {
+            background-color: #1a75ff;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        #controls button:hover {
+            background-color: #1558d4;
+        }
+        #output {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #fff;
+            border: 2px solid #004d99;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            font-size: 24px;
+            color: #004d99;
+            max-width: 90%;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        .key-info {
+            margin-top: 20px;
+            font-size: 18px;
+            color: #004d99;
+        }
+        .key-info p {
+            margin: 10px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Hand Sign Detection</h1>
+    <div class="container">
+        <div id="videoContainer">
+            <img id="videoFeed" src="" alt="Video Feed">
+        </div>
+        <div id="controls">
+            <button id="startButton">Start Camera</button>
+        </div>
+        <div id="output">Detected Sign: <span id="signLabel">None</span></div>
+        <div class="key-info">
+            <p>Press '1' to add the detected sign to the sentence.</p>
+            <p>Press '2' to clear the sentence.</p>
+            <p>Press 'Space' to add a space to the sentence.</p>
+        </div>
+    </div>
+    <script>
+        const videoFeed = document.getElementById('videoFeed');
+        const startButton = document.getElementById('startButton');
+        const signLabel = document.getElementById('signLabel');
+
+        function updateVideoFeed() {
+            videoFeed.src = '/video_feed';
+        }
+
+        function updateSignLabel(sign) {
+            signLabel.textContent = sign;
+        }
+
+        document.addEventListener('keydown', function(event) {
+            if (event.key === '1') {
+                fetch('/keypress/1', { method: 'POST' }).then(response => {
+                    if (response.ok) {
+                        console.log('Added sign to sentence');
+                    }
+                });
+            } else if (event.key === '2') {
+                fetch('/keypress/2', { method: 'POST' }).then(response => {
+                    if (response.ok) {
+                        console.log('Cleared the sentence');
+                    }
+                });
+            } else if (event.code === 'Space') {
+                fetch('/keypress/space', { method: 'POST' }).then(response => {
+                    if (response.ok) {
+                        console.log('Added space to the sentence');
+                    }
+                });
+            }
+        });
+
+        startButton.addEventListener('click', function() {
+            updateVideoFeed();
+        });
+
+        // Fetch the initial sign
+        fetch('/video_feed').then(response => response.text()).then(text => {
+            updateSignLabel(text);
+        });
+    </script>
+</body>
+</html>
