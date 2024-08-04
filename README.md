@@ -22,4 +22,10 @@ The model is a Convolutional Neural Network (CNN) designed to classify images of
 Install the required packages in requirements.txt and run it locally using the app.py file.
 
 
+Text To Speech:
+This project uses text to speech to read out the letters so far forming a sentence.
+Press 1 to add the letter to the text box
+Press 2 to clear
+Press space to add a space
+If you want to hear the sentence, show the stop symbol by showing your full palm and fingers fully extended and press 1.
 
